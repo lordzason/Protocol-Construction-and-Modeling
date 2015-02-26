@@ -1,0 +1,88 @@
+# File:          Makefile
+# Author:        
+# Created:       May 28,2014
+# Acknowledgement:  adapted from an example by Henry Walker Grinnell College
+#----------------------------------------------------------------------------
+# Use the gcc compiler
+CC = cc
+
+# Set compilation flags
+#   -ansi (check syntax against the American National Standard for C
+CFLAGS = -Wall -g
+
+#----------------------------------------------------------------------------
+# build rules:
+#
+# Each rule takes the following form>  (Note there MUST be a tab,
+# as opposed to several spaces, preceeding each command.
+#
+# target_name:  dependency_list
+#	command(s)
+
+
+all: Prog_run
+
+
+# List program components, what they depend on, and how to compile each
+
+#<<<<<<< HEAD
+Prog_run: main_transmission.o readopactable.o totalopac.o readchemtable.o read_t_p.o rt_transmission.o nrutil.o utils.o interpol.o planck.o geometry.o getFileArray.o getVars.o getNTau.o getChemSelection.o
+	$(CC) -lm -o Prog_run  main_transmission.o readopactable.o totalopac.o readchemtable.o read_t_p.o rt_transmission.o nrutil.o utils.o interpol.o planck.o geometry.o getFileArray.o getVars.o getNTau.o getChemSelection.o
+#=======
+#Prog_run: main_transmission.o readopactable.o totalopac.o readchemtable.o read_t_p_mod.o rt_transmission.o nrutil.o utils.o interpol.o planck.o geometry.o getFileArray.o 
+#	$(CC) -lm -o Prog_run  main_transmission.o readopactable.o totalopac.o readchemtable.o read_t_p_mod.o rt_transmission.o nrutil.o utils.o interpol.o planck.o geometry.o getFileArray.o
+#>>>>>>> remotes/origin/molecularWeight
+
+main_transmission.o: main_transmission.c opac.h atmos.h rt_transmission.h 
+	$(CC) $(CFLAGS) -c main_transmission.c 
+
+readopactable.o: readopactable.c constant.h atmos.h opac.h  
+	$(CC) $(CFLAGS) -c  readopactable.c 
+
+totalopac.o: totalopac.c include.h constant.h atmos.h opac.h readopactable.o readchemtable.c nrutil.c utils.c interpol.c getFileArray.h getVars.h getChemSelection.h
+	$(CC) $(CFLAGS) -c  totalopac.c 
+
+readchemtable.o:  readchemtable.c opac.h getFileArray.h getVars.h getChemSelection.h
+	$(CC) $(CFLAGS) -c readchemtable.c 
+
+nrutil.o: nrutil.c nrutil.h 
+	$(CC) $(CFLAGS) -c nrutil.c 
+
+utils.o: utils.c utils.h include.h
+	$(CC) $(CFLAGS) -c utils.c 
+
+interpol.o: interpol.c utils.h interpol.h utils.c
+	$(CC) $(CFLAGS) -c interpol.c 
+
+
+#<<<<<<< HEAD
+read_t_p.o:  read_t_p.c  atmos.h getFileArray.h getVars.h getNTau.h
+	$(CC) $(CFLAGS) -c read_t_p.c 
+#=======
+#read_t_p_mod.o:  read_t_p_mod.c  atmos.h input.h getFileArray.h  
+#	$(CC) $(CFLAGS) -c read_t_p_mod.c
+#>>>>>>> remotes/origin/molecularWeight
+
+rt_transmission.o:  rt_transmission.c opac.h atmos.h constant.h include.h nrutil.c rt_transmission.h interpol.c planck.c utils.c geometry.c getVars.h getNTau.h getFileArray.h
+	$(CC) $(CFLAGS) -c  rt_transmission.c
+
+planck.o:  constant.h include.h planck.h planck.c
+	$(CC) $(CFLAGS) -c  planck.c 
+
+getFileArray.o:  getFileArray.c  getFileArray.h
+	$(CC) $(CFLAGS) -c getFileArray.c
+	
+getVars.o:  getVars.c  getVars.h
+	$(CC) $(CFLAGS) -c getVars.c
+	
+getChemSelection.o:  getChemSelection.c  getChemSelection.h
+	$(CC) $(CFLAGS) -c getChemSelection.c
+	
+getNTau.o:  getNTau.c  getNTau.h
+	$(CC) $(CFLAGS) -c getNTau.c
+	
+geometry.o:  geometry.c geometry.h opac.h atmos.h constant.h include.h interpol.c  interpol.h
+	$(CC) $(CFLAGS) -c  geometry.c 
+
+clean:
+	rm -f *.o *~ core*

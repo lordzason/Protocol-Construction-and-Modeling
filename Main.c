@@ -19,6 +19,7 @@
 #include "crypto_box.h"
 #include "Client.h"
 #include "Server.h"
+#include "devurandom.h"
 
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
@@ -39,12 +40,17 @@ void display_bytes(const unsigned char *byte_vector, long long int length) {
 int main()
 {
   unsigned char* client_nonce_n1;
+  clientkeypair ckeypair;
 
-  client_nonce_n1 = clientGenerateNonce();
-  printf("Client Nonce N1\n");
-  display_bytes(client_nonce_n1, crypto_box_NONCEBYTES);
+  client_nonce_n1 = clientGenerateNonce(); //Generates nonce for client
+  //printf("Client Nonce N1\n");
+  display_bytes(client_nonce_n1, crypto_box_NONCEBYTES); //Display client nonce
 
-  printf("Printing lalalalala!\n");
+  ckeypair = clientGenerateKeyPair(); //Generate the client key pair
+
+  //Concate nonce and public key pair
+
+  //Encrypt with server's initial public key and send to the server
 
   return NO_ERROR;
 }

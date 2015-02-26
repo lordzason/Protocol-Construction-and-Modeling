@@ -18,6 +18,7 @@
 #include <assert.h>
 #include "crypto_box.h"
 #include "Client.h"
+#include "devurandom.h"
 
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
@@ -37,3 +38,16 @@ unsigned char* clientGenerateNonce()
 
   return shared_nonce;
 }
+
+/* Construct keypairs for sender and receiver. */
+clientkeypairs clientGenerateKeyPair()
+{
+  clientkeypairs keys;
+  int result;
+
+  result = crypto_box_keypair(keys.sender_pk, keys.sender_sk);
+  assert(result == 0);
+  return keys;
+}
+
+//Getters and setters for the message
