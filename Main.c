@@ -38,17 +38,17 @@ void display_bytes(const unsigned char *byte_vector, long long int length) {
   putchar('\n');
 }
 
+/* Main models the protocols for the client and the server*/
 int main()
 {
-  unsigned char* client_nonce_n1;
-  clientkeypairs ckeypair;
+  /*Generate client nonce*/
+  clientGenerateNonce();
+  display_bytes(client_shared_nonce, crypto_box_NONCEBYTES);
 
-  client_nonce_n1 = clientGenerateNonce(); //Generates nonce for client
+  /*Generate client public keyPair*/
+  clientGenerateKeyPair();
+  display_bytes(sender_pk,crypto_box_PUBLICKEYBYTES);
 
-  //printf("Client Nonce N1\n");
-  display_bytes(client_nonce_n1, crypto_box_NONCEBYTES); //Display client nonce
-
-  // ckeypair = clientGenerateKeyPair(); //Generate the client key pair
 
   //Concate nonce and public key pair
 
