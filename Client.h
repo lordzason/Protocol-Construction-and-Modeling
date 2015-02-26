@@ -8,7 +8,7 @@
    last revised February 25, 2015
 */
 
-#include "crypto_box.h"
+#include <crypto_box.h>
 #include "devurandom.h"
 
 unsigned char* clientGenerateNonce();

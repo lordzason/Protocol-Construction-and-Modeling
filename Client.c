@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "crypto_box.h"
+#include <crypto_box.h>
 #include "Client.h"
 #include "devurandom.h"
 
@@ -25,6 +25,7 @@
 #define NO_ERROR                 0
 
 //unsigned char shared_nonce[crypto_box_NONCEBYTES];
+
 
 /* Generates a nonce composed of 0s or a random nonce */
 unsigned char* clientGenerateNonce()

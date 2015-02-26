@@ -22,17 +22,17 @@ all: Main
 
 
 # List program components, what they depend on, and how to compile each
-Main: Main.o Client.o Server.o 
-	$(CC) -I/usr/include/nacl -lnacl -o Main Main.o Client.o Server.o
+Main:  Client.o Server.o devurandom.o
+	$(CC) -I/usr/include/nacl  -o Main  Client.o Server.o devurandom.o Main.c -lnacl
 
-Main.o: Main.c crypto_box.h
-	$(CC) $(CFLAGS) -c Main.c 
+Client.o: Client.c 
+	$(CC) $(CFLAGS) -c -I/usr/include/nacl Client.c 
 
-Client.o: Client.c crypto_box.h
-	$(CC) $(CFLAGS) -c Client.c 
+Server.o: Server.c 
+	$(CC) $(CFLAGS) -c -I/usr/include/nacl Server.c 
 
-Server.o: Server.c crypto_box.h
-	$(CC) $(CFLAGS) -c Server.c 
+devurandom.o: devurandom.c 
+	$(CC) $(CFLAGS) -c -I/usr/include/nacl devurandom.c 
 
 clean:
 	rm -f *.o *~ core*
