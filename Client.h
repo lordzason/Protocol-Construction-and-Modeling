@@ -13,12 +13,14 @@
 
 /* Methods for the client*/
 //unsigned char* clientGenerateNonce();
-void clientGenerateNonce();
+void serverGenerateKeyPair();
+void initialServerGenerateKeyPair();
+void serverGenerateNonce();
 
 /* Variables and Structures*/
 
 unsigned char client_shared_nonce[crypto_box_NONCEBYTES];
-unsigned char sender_pk[crypto_box_PUBLICKEYBYTES];
+unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
 /*
 typedef struct clientkeypairs{
   unsigned char sender_pk[crypto_box_PUBLICKEYBYTES];
