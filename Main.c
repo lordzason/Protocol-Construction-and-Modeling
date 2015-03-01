@@ -24,9 +24,9 @@
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
+#define NONCE_PK_LENGTH crypto_box_NONCEBYTES+crypto_box_PUBLICKEYBYTES //Remove
 
 /* Display the contents of an array of unsigned char values. */
-
 void display_bytes(const unsigned char *byte_vector, long long int length) {
   long long int counter = 0;
   while (counter < length) {
@@ -58,21 +58,23 @@ int main()
 
   /* Generate client nonce */
   clientGenerateNonce();
-  printf("Client Shared Nonce:\n");
-  display_bytes(client_shared_nonce, crypto_box_NONCEBYTES);
-
+  
   /* Generate client public keyPair */
   clientGenerateKeyPair();
   printf("Client Public Key:\n");
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
 
   /* Client concatenates the nonce and its own public key */
-  client_nonce_pk_concatation();
+  client_encrypt_nonce_pk(initial_server_nonce,initial_server_pk, initial_server_sk);
   
   /* Client encrypts concatenation using server's public key 
      (using nonce N0 from the server), signs it with server's
      first time signing key */
-  client_encrypt_nonce_pk();
+  // client_encrypt_nonce_pk();
+  //  display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
+
+  /* Client sends encrypted message to the server */
+  client_send_encryption("clientEncryptedFile.txt");
 
   return NO_ERROR;
 }

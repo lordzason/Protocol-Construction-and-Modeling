@@ -16,10 +16,12 @@
 void serverGenerateKeyPair();
 void initialServerGenerateKeyPair();
 void serverGenerateNonce();
+void client_send_encryption(char *encryptedFileLocation);
+void display_bytes(const unsigned char *byte_vector, long long int length);
+void client_encrypt_nonce_pk(unsigned char *nonce, unsigned char *pk, unsigned char *sk);
+void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
 
 /* Variables and Structures*/
-
-unsigned char client_shared_nonce[crypto_box_NONCEBYTES];
 unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
 /*
 typedef struct clientkeypairs{

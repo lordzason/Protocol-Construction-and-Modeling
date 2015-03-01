@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <crypto_box.h>
-#include "Client.h"
 #include "Server.h"
 #include "devurandom.h"
 
@@ -72,4 +71,4 @@ void  initialServerGenerateKeyPair()
   assert(result == 0);
 }//clientGenerateKeyPair()
 
-//Getters and setters for the message
+

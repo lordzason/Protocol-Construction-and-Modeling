@@ -17,9 +17,9 @@ void initialServerGenerateNonce();
 void serverGenerateNonce();
 void serverGenerateKeyPair();
 void initialServerGenerateKeyPair();
+void display_bytes(const unsigned char *byte_vector, long long int length);
 
 /* Variables and Structures*/
-
 unsigned char initial_server_nonce[crypto_box_NONCEBYTES];
 unsigned char server_pk[crypto_box_PUBLICKEYBYTES];
 unsigned char initial_server_pk[crypto_box_PUBLICKEYBYTES];
