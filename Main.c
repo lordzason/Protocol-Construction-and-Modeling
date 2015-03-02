@@ -24,7 +24,7 @@
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
-#define NONCE_PK_LENGTH crypto_box_NONCEBYTES+crypto_box_PUBLICKEYBYTES //Remove
+
 
 /* Display the contents of an array of unsigned char values. */
 void display_bytes(const unsigned char *byte_vector, long long int length) {
@@ -41,6 +41,9 @@ void display_bytes(const unsigned char *byte_vector, long long int length) {
 /* Main models the protocols for the client and the server*/
 int main()
 {
+  /* Output fileNames*/
+  char initial_client_encryption_location [] ="clientEncryptedFile.txt"; 
+
   /* Generate server's initial keyPair */
   initialServerGenerateKeyPair();
   printf("Server's Initial Public Key:\n");
@@ -65,7 +68,7 @@ int main()
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
 
   /* Client concatenates the nonce and its own public key */
-  client_encrypt_nonce_pk(initial_server_nonce,initial_server_pk, initial_server_sk);
+  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,initial_server_pk, initial_server_sk,initial_client_encryption_location);
   
   /* Client encrypts concatenation using server's public key 
      (using nonce N0 from the server), signs it with server's
@@ -74,7 +77,9 @@ int main()
   //  display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
 
   /* Client sends encrypted message to the server */
-  client_send_encryption("clientEncryptedFile.txt");
+  //  client_send_encryption("clientEncryptedFile.txt");
+ 
+ /* Server decrypts initial message*/
 
   return NO_ERROR;
 }

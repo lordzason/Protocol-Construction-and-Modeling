@@ -12,7 +12,6 @@
 #include "devurandom.h"
 
 /* Methods for the client*/
-//unsigned char* clientGenerateNonce();
 void initialServerGenerateNonce();
 void serverGenerateNonce();
 void serverGenerateKeyPair();
@@ -25,9 +24,4 @@ unsigned char server_pk[crypto_box_PUBLICKEYBYTES];
 unsigned char initial_server_pk[crypto_box_PUBLICKEYBYTES];
 unsigned char initial_server_sk[crypto_box_SECRETKEYBYTES];
 
-/*
-typedef struct clientkeypairs{
-  unsigned char sender_pk[crypto_box_PUBLICKEYBYTES];
-  unsigned char sender_sk[crypto_box_SECRETKEYBYTES];
-}clientkeypairs;
-*/
+

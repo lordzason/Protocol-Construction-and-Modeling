@@ -29,7 +29,7 @@
 /*Fields and Variables*/
 unsigned char client_sk[crypto_box_SECRETKEYBYTES];
 unsigned char client_shared_nonce[crypto_box_NONCEBYTES];
-unsigned char ciphertext[crypto_box_ZEROBYTES+NONCE_PK_LENGTH];
+//unsigned char * ciphertext;
 unsigned char* concatResult;
 
 /* Generates a nonce composed of 0s or a random nonce */
@@ -74,23 +74,28 @@ void clientGenerateKeyPair()
 /* Client encrypts concatenation using server's public key 
    (using nonce N0 from the server), signs it with server's
    first time signing key */
-void client_encrypt_nonce_pk(unsigned char *nonce, unsigned char *pk, unsigned char *sk)
+long long  client_encrypt_nonce_pk_send(unsigned char *nonce,long long nonce_length,unsigned char *pk, unsigned char *sk,char * output_filename)
 {
+  long long ciphertext_length = nonce_length + crypto_box_PUBLICKEYBYTES + crypto_box_ZEROBYTES;
+  unsigned char ciphertext[ciphertext_length];
   int result;
 
+  //concatenates the N0 and the public key of the client
   clientConcatenate(client_shared_nonce,crypto_box_NONCEBYTES, client_pk, crypto_box_PUBLICKEYBYTES);
 
+  // encrypts the results of the concatenation 
   result = crypto_box(ciphertext, concatResult, crypto_box_ZEROBYTES+NONCE_PK_LENGTH, nonce, pk, sk);
-
   assert(result == 0);
 
-  printf("CipherText:\n");
-  display_bytes(ciphertext, crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
-
+  printf("CipherText :\n");
+  display_bytes(ciphertext,ciphertext_length);
+  // send the results of the encryption to an output file
+  client_send_encryption(output_filename,ciphertext,ciphertext_length);
+  return ciphertext_length;
 }//client_encrypt_nonce_pk()
 
 /* Client sends encrypted message to the server */
-void client_send_encryption(char *encryptedFileLocation)
+void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertext [], int ciphertext_length )
 {
   FILE *clientEncryptedFile;
   //long long int counter = 0;
@@ -99,8 +104,8 @@ void client_send_encryption(char *encryptedFileLocation)
   /*while (counter < crypto_box_ZEROBYTES+NONCE_PK_LENGTH) {
     (void) fprintf(clientEncryptedFile, "%02x", ciphertext[counter]);
     counter++;*/
-
-  fwrite(ciphertext, sizeof(unsigned char), sizeof(ciphertext), clientEncryptedFile);
+  display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
+ fwrite(ciphertext, sizeof(unsigned char), ciphertext_length * sizeof(unsigned char), clientEncryptedFile);
 
   fclose(clientEncryptedFile);
 }//client_send_encryption

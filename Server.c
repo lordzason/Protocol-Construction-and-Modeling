@@ -71,4 +71,10 @@ void  initialServerGenerateKeyPair()
   assert(result == 0);
 }//clientGenerateKeyPair()
 
+/* Decrypt initial message */
+
+void server_decrypt_message (char * filename, long long cipher_text_length){
+
+
+}//server_decrypt_message(char *)
 
