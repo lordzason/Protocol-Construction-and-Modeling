@@ -72,9 +72,59 @@ void  initialServerGenerateKeyPair()
 }//clientGenerateKeyPair()
 
 /* Decrypt initial message */
+/*void server_decrypt_message (char * filename, long long cipher_text_length){
+  //variables cryptobox_open
+  unsigned char message[cipher_text_length];
+  unsigned char ciphertext[cipher_text_length];
+  // read file into ciphertext
+  FILE *encryptedFile;
+  encryptedFile = fopen(filename, "r");
+  fread(ciphertext,sizeof(unsigned char), cipher_text_length * sizeof(unsigned char), encryptedFile);
+  fclose(encryptedFile);
+  //use cryptobox open to decrpyt the ciphertext
+  //crypto_box_open(m,c,clen,n,pk,sk);
+  printf("Display server_sk before client decryption:\n");
+  display_bytes(server_sk,crypto_box_SECRETKEYBYTES);
+  int result = crypto_box_open(message, ciphertext, cipher_text_length,initial_server_nonce,initial_server_pk,server_sk);
+  //int result = crypto_box_open(message, ciphertext, cipher_text_length,initial_server_nonce,client_pk,initial_server_sk);
+  assert(result == 0);
+  printf("Server Decrypted Message: \n");
+  display_bytes(message,cipher_text_length);
+}//server_decrypt_message(char *)
+*/
+
+
 
 void server_decrypt_message (char * filename, long long cipher_text_length){
 
+  //variables cryptobox_open
+  unsigned char ciphertext[cipher_text_length];
+  // read file into ciphertext
+  FILE *encryptedFile;
+  encryptedFile = fopen(filename, "r");
+  fread(ciphertext,sizeof(unsigned char), cipher_text_length * sizeof(unsigned char), encryptedFile);
+  fclose(encryptedFile);
 
+  //shed of the client public key
+  unsigned char receive_client_pk [crypto_box_PUBLICKEYBYTES];
+    unsigned char receive_encoded [cipher_text_length -crypto_box_PUBLICKEYBYTES];
+  int counter;
+  for (counter = 0; counter <crypto_box_PUBLICKEYBYTES ; counter++)
+    receive_client_pk[counter] = ciphertext[counter];
+  for (counter = 0; counter <cipher_text_length ; counter++)
+    receive_encoded[counter] = ciphertext[counter+crypto_box_PUBLICKEYBYTES ];
+
+
+  //variables cryptobox_open
+  unsigned char message[cipher_text_length - crypto_box_PUBLICKEYBYTES];
+ 
+  //use cryptobox open to decrpyt the ciphertext
+  //crypto_box_open(m,c,clen,n,pk,sk);
+  printf("Display server_sk before client decryption:\n");
+  int result = crypto_box_open(message, receive_encoded, cipher_text_length-crypto_box_PUBLICKEYBYTES,initial_server_nonce,receive_client_pk,server_sk);
+  //int result = crypto_box_open(message, ciphertext, cipher_text_length,initial_server_nonce,client_pk,initial_server_sk);
+  assert(result == 0);
+  printf("Server Decrypted Message: \n");
+  display_bytes(message,cipher_text_length-crypto_box_PUBLICKEYBYTES);
 }//server_decrypt_message(char *)
 

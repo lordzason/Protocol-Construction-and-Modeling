@@ -28,7 +28,8 @@
 
 /*Fields and Variables*/
 unsigned char client_sk[crypto_box_SECRETKEYBYTES];
-unsigned char client_shared_nonce[crypto_box_NONCEBYTES];
+unsigned char client_nonce[crypto_box_NONCEBYTES];
+
 //unsigned char * ciphertext;
 unsigned char* concatResult;
 
@@ -38,11 +39,11 @@ void clientGenerateNonce()
   // static unsigned char shared_nonce[crypto_box_NONCEBYTES];
   //long long int counter;
 
-  randombytes(client_shared_nonce, crypto_box_NONCEBYTES);
+  randombytes(client_nonce, crypto_box_NONCEBYTES);
   /*for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
     client_shared_nonce[counter] = 0;*/
   printf("Client Shared Nonce:\n");
-  display_bytes(client_shared_nonce, crypto_box_NONCEBYTES);
+  display_bytes(client_nonce, crypto_box_NONCEBYTES);
   //return shared_nonce;
 
 }//clientGenerateNonce()
@@ -74,24 +75,31 @@ void clientGenerateKeyPair()
 /* Client encrypts concatenation using server's public key 
    (using nonce N0 from the server), signs it with server's
    first time signing key */
-long long  client_encrypt_nonce_pk_send(unsigned char *nonce,long long nonce_length,unsigned char *pk, unsigned char *sk,char * output_filename)
+long long  client_encrypt_nonce_pk_send(unsigned char *serverNonce,long long nonce_length,unsigned char *server_pk,char * output_filename)
 {
-  long long ciphertext_length = nonce_length + crypto_box_PUBLICKEYBYTES + crypto_box_ZEROBYTES;
-  unsigned char ciphertext[ciphertext_length];
-  int result;
+  //  long long ciphertext_length = nonce_length + crypto_box_PUBLICKEYBYTES + crypto_box_ZEROBYTES;
+ long long ciphertext_length = nonce_length + crypto_box_ZEROBYTES;
+ unsigned char ciphertext[ciphertext_length];
+ unsigned char  concateResult[ciphertext_length];
+ unsigned char  final_message [ciphertext_length + crypto_box_PUBLICKEYBYTES];
+ int result;
 
-  //concatenates the N0 and the public key of the client
-  clientConcatenate(client_shared_nonce,crypto_box_NONCEBYTES, client_pk, crypto_box_PUBLICKEYBYTES);
+  //concatenates the N1 with zero bytes
+ clientZeroConcatenate (concateResult,client_nonce,nonce_length);
+  //  clientConcatenate(client_shared_nonce,crypto_box_NONCEBYTES, client_pk, crypto_box_PUBLICKEYBYTES);
 
   // encrypts the results of the concatenation 
-  result = crypto_box(ciphertext, concatResult, crypto_box_ZEROBYTES+NONCE_PK_LENGTH, nonce, pk, sk);
+  // result = crypto_box(ciphertext, concatResult, crypto_box_ZEROBYTES+NONCE_PK_LENGTH, nonce, pk, sk);
+  result = crypto_box(ciphertext,concateResult,ciphertext_length,serverNonce,server_pk,client_sk);
   assert(result == 0);
-
+  //concatenate the results from encryption with client public key
+  clientPairConcatenate (final_message,client_pk, crypto_box_PUBLICKEYBYTES, ciphertext, ciphertext_length);
+ 
   printf("CipherText :\n");
-  display_bytes(ciphertext,ciphertext_length);
+  display_bytes(final_message,ciphertext_length +crypto_box_PUBLICKEYBYTES );
   // send the results of the encryption to an output file
-  client_send_encryption(output_filename,ciphertext,ciphertext_length);
-  return ciphertext_length;
+  client_send_encryption(output_filename,final_message,ciphertext_length+crypto_box_PUBLICKEYBYTES);
+  return ciphertext_length +crypto_box_PUBLICKEYBYTES ;
 }//client_encrypt_nonce_pk()
 
 /* Client sends encrypted message to the server */
@@ -104,12 +112,24 @@ void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertex
   /*while (counter < crypto_box_ZEROBYTES+NONCE_PK_LENGTH) {
     (void) fprintf(clientEncryptedFile, "%02x", ciphertext[counter]);
     counter++;*/
+  printf("Client writing to Encrypted File\n");
   display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
  fwrite(ciphertext, sizeof(unsigned char), ciphertext_length * sizeof(unsigned char), clientEncryptedFile);
 
   fclose(clientEncryptedFile);
 }//client_send_encryption
+/* Concatenates two elements together */
+void  clientPairConcatenate (unsigned char* result, unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length)
+{
+  int counter;
 
+  for (counter = 0; counter < element1Length; counter++)
+    result[counter] = element1[counter];
+
+  for (counter = 0; counter < element2Length; counter++)
+    result[element1Length + counter] = element2[counter];
+}//clientConcatenate
+/*
 void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length)
 {
   int counter;
@@ -126,4 +146,16 @@ void clientConcatenate (unsigned char *element1, long long element1Length, unsig
 
   concatResult = result;
 }//clientConcatenate
+*/
+/* Add zero bytes to element */
+void clientZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length)
+{
+  int counter;
 
+  for (counter = 0; counter < crypto_box_ZEROBYTES; counter++)
+    result[counter] = 0;
+
+  for (counter = 0; counter < element1Length; counter++)
+    result[crypto_box_ZEROBYTES + counter] = element1[counter];
+
+}//clientConcatenate

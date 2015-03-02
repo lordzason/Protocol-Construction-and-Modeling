@@ -48,11 +48,15 @@ int main()
   initialServerGenerateKeyPair();
   printf("Server's Initial Public Key:\n");
   display_bytes(initial_server_pk,crypto_box_PUBLICKEYBYTES);
+  printf("Server's Initial Secret Key:\n");
+  display_bytes(initial_server_sk,crypto_box_SECRETKEYBYTES);
 
   /* Generate server's personal keyPair */
   serverGenerateKeyPair();
   printf("Server's Personal Public Key:\n");
   display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
+  printf("Server's Personal Secret Key:\n");
+  display_bytes(server_sk,crypto_box_SECRETKEYBYTES);
 
   /* Generate server nonce */
   initialServerGenerateNonce();
@@ -60,26 +64,25 @@ int main()
   display_bytes(initial_server_nonce, crypto_box_NONCEBYTES);
 
   /* Generate client nonce */
+  printf("Client's Nonce:\n");
   clientGenerateNonce();
   
   /* Generate client public keyPair */
   clientGenerateKeyPair();
   printf("Client Public Key:\n");
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
+  printf("Client Secret Key:\n");
+  display_bytes(client_sk,crypto_box_SECRETKEYBYTES);
 
   /* Client concatenates the nonce and its own public key */
-  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,initial_server_pk, initial_server_sk,initial_client_encryption_location);
+  printf("Client Encrypt and Send\n");
+  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,server_pk,initial_client_encryption_location);
+  // long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,initial_server_pk, initial_server_sk,initial_client_encryption_location);
+  printf("Client Encrypt and Send End\n");
   
-  /* Client encrypts concatenation using server's public key 
-     (using nonce N0 from the server), signs it with server's
-     first time signing key */
-  // client_encrypt_nonce_pk();
-  //  display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
-
-  /* Client sends encrypted message to the server */
-  //  client_send_encryption("clientEncryptedFile.txt");
- 
- /* Server decrypts initial message*/
+  /* Server decrypts initial message*/
+  printf("Server Decrypt\n");
+  server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
   return NO_ERROR;
 }

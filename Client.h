@@ -17,12 +17,12 @@ void initialServerGenerateKeyPair();
 void serverGenerateNonce();
 void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertext [], int ciphertext_length );
 void display_bytes(const unsigned char *byte_vector, long long int length);
-long long  client_encrypt_nonce_pk_send(unsigned char *nonce,long long nonce_length,unsigned char *pk, unsigned char *sk,char * output_filename);
-void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
-
+long long  client_encrypt_nonce_pk_send(unsigned char *serverNonce,long long nonce_length,unsigned char *server_pk,char * output_filename);
+//void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
+void clientZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length);
+void  clientPairConcatenate (unsigned char* result, unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
 /* Variables and Structures*/
 unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
-
-
+unsigned char client_sk[crypto_box_SECRETKEYBYTES]; //REMEMBER TO REMOVE
 
 
