@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <crypto_box.h>
+#include <time.h>
 #include "Client.h"
 #include "Server.h"
 #include "devurandom.h"
@@ -43,6 +44,7 @@ int main()
 {
   /* Output fileNames*/
   char initial_client_encryption_location [] ="clientEncryptedFile.txt"; 
+  char server_encrypted_timestamp_location [] = "serverEncryptedTimeStamp.txt"; 
 
   /* Generate server's initial keyPair */
   initialServerGenerateKeyPair();
@@ -83,6 +85,11 @@ int main()
   printf("Server Decrypt\n");
   //server_decrypt_message (initial_client_encryption_location,cipher_text_length);
   initial_server_decrypt_message (initial_client_encryption_location,cipher_text_length);
+
+  /* PROTOCOL 3*/
+  serverGenerateNonce(); 
+  time_t name = time(NULL);
+  server_encrypt_time_message(server_encrypted_timestamp_location);
 
   return NO_ERROR;
 }

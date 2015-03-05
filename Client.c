@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <crypto_box.h>
+#include <time.h>
 #include "Client.h"
 #include "devurandom.h"
 
@@ -29,7 +30,6 @@
 /*Fields and Variables*/
 unsigned char client_sk[crypto_box_SECRETKEYBYTES];
 unsigned char client_nonce[crypto_box_NONCEBYTES];
-
 //unsigned char * ciphertext;
 unsigned char* concatResult;
 
@@ -106,18 +106,14 @@ long long  client_encrypt_nonce_pk_send(unsigned char *serverNonce,long long non
 void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertext [], int ciphertext_length )
 {
   FILE *clientEncryptedFile;
-  //long long int counter = 0;
   clientEncryptedFile = fopen(encryptedFileLocation, "w");
 
-  /*while (counter < crypto_box_ZEROBYTES+NONCE_PK_LENGTH) {
-    (void) fprintf(clientEncryptedFile, "%02x", ciphertext[counter]);
-    counter++;*/
-  printf("Client writing to Encrypted File\n");
+  printf("Client Wrote to the Encrypted File the Following:\n");
   display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
- fwrite(ciphertext, sizeof(unsigned char), ciphertext_length * sizeof(unsigned char), clientEncryptedFile);
-
+  fwrite(ciphertext, sizeof(unsigned char), ciphertext_length * sizeof(unsigned char), clientEncryptedFile);
   fclose(clientEncryptedFile);
 }//client_send_encryption
+
 /* Concatenates two elements together */
 void  clientPairConcatenate (unsigned char* result, unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length)
 {

@@ -23,8 +23,11 @@ all: Main
 
 
 # List program components, what they depend on, and how to compile each
-Main:  Client.o Server.o devurandom.o
+Main:  Client.o Server.o devurandom.o 
 	$(CC) -I/usr/include/nacl  -o Main  Client.o Server.o devurandom.o Main.c -lnacl
+
+#Main.o:  Client.o Server.o devurandom.o
+#	$(CC) -c -I/usr/include/nacl Main.c
 
 Client.o: Client.c 
 	$(CC) $(CFLAGS) -c -I/usr/include/nacl Client.c 

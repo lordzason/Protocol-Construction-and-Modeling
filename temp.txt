@@ -1,0 +1,27 @@
+
+
+
+Client Shared Nonce:
+7c d0 e3 fd ba cb 1a 2a 9b 29 0b fe b3 89 c0 fc
+c2 a4 8b 59 aa 44 05 fe 
+
+
+Client Public Key:
+63 da 05 c8 07 8f 97 6f 7b bb 90 2f 02 04 54 9d
+63 1c dd a7 6b 6c 66 8e b8 8a 0e da 9f e8 9c 78
+61 28 87 bb c0 e8 8c 75 5d 90 c9 59 56 6d a4 dc
+77 d7 c8 9d 14 f8 07 5c 
+
+
+61 28 87 bb c0 e8 8c 75 5d 90 c9 59 56 6d a4 dc
+77 d7 c8 9d 14 f8 07 5c 
+
+
+3c f4 c3 55 b3 de c9 66 e6 0f 14 35 35 4a c7 93
+55 56 e0 57 cb 63 f3 cf f7 56 c2 55 41 5b ad 84
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+cc b7 3e 38 45 e1 b4 ac
+
+
+bb 6f e4 61 4f 89 c2 f3 98 90 9e 7c 99 79 0b 33
+42 f0 17 c3 59 f6 32 f6 
