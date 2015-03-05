@@ -157,5 +157,6 @@ void clientZeroConcatenate (unsigned char * result, unsigned char *element1, lon
 
   for (counter = 0; counter < element1Length; counter++)
     result[crypto_box_ZEROBYTES + counter] = element1[counter];
-
+  printf("concatenate with zero\n");
+ display_bytes(result,crypto_box_ZEROBYTES+element1Length );
 }//clientConcatenate

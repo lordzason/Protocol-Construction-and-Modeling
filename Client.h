@@ -5,11 +5,15 @@
    Zhi Chen
 
    created February 25, 2015
-   last revised February 25, 2015
+   last revised March 05, 2015
 */
 
 #include <crypto_box.h>
 #include "devurandom.h"
+
+/* Variables and Structures*/
+unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
+unsigned char client_sk[crypto_box_SECRETKEYBYTES]; //REMEMBER TO REMOVE
 
 /* Methods for the client*/
 void serverGenerateKeyPair();
@@ -21,8 +25,7 @@ long long  client_encrypt_nonce_pk_send(unsigned char *serverNonce,long long non
 //void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
 void clientZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length);
 void  clientPairConcatenate (unsigned char* result, unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
-/* Variables and Structures*/
-unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
-unsigned char client_sk[crypto_box_SECRETKEYBYTES]; //REMEMBER TO REMOVE
+
+
 
 

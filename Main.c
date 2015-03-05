@@ -77,12 +77,12 @@ int main()
   /* Client concatenates the nonce and its own public key */
   printf("Client Encrypt and Send\n");
   long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,server_pk,initial_client_encryption_location);
-  // long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,initial_server_pk, initial_server_sk,initial_client_encryption_location);
   printf("Client Encrypt and Send End\n");
   
   /* Server decrypts initial message*/
   printf("Server Decrypt\n");
-  server_decrypt_message (initial_client_encryption_location,cipher_text_length);
+  //server_decrypt_message (initial_client_encryption_location,cipher_text_length);
+  initial_server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
   return NO_ERROR;
 }
