@@ -21,23 +21,12 @@
 #include "Client.h"
 #include "Server.h"
 #include "devurandom.h"
+#include "utils.h"
 
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
 
-
-/* Display the contents of an array of unsigned char values. */
-void display_bytes(const unsigned char *byte_vector, long long int length) {
-  long long int counter = 0;
-  while (counter < length) {
-    (void) printf("%02x", byte_vector[counter]);
-    (void) putchar((++counter & 0xF) ? ' ' : '\n');
-  }
-  if (counter & 0xF)
-    putchar('\n');
-  putchar('\n');
-}
 
 /* Main models the protocols for the client and the server*/
 int main()
@@ -46,24 +35,21 @@ int main()
   char initial_client_encryption_location [] ="clientEncryptedFile.txt"; 
   char server_encrypted_timestamp_location [] = "serverEncryptedTimeStamp.txt"; 
 
-  /* Generate server's initial keyPair */
-  initialServerGenerateKeyPair();
-  printf("Server's Initial Public Key:\n");
+  /* Sever Initialisation: Initial nonce, public key and secret key are created*/
+  //  initialServerGenerateKeyPair(); change to much general initialisation
+  printf("\nBeginning server initialisation process..\n");
+
+  server_start_first_time_init();
+
+  printf("\nServer's Initial Public Key:\n");
   display_bytes(initial_server_pk,crypto_box_PUBLICKEYBYTES);
-  printf("Server's Initial Secret Key:\n");
+  printf("\nServer's Initial Secret Key:\n");
   display_bytes(initial_server_sk,crypto_box_SECRETKEYBYTES);
-
-  /* Generate server's personal keyPair */
-  serverGenerateKeyPair();
-  printf("Server's Personal Public Key:\n");
-  display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
-  printf("Server's Personal Secret Key:\n");
-  display_bytes(server_sk,crypto_box_SECRETKEYBYTES);
-
-  /* Generate server nonce */
-  initialServerGenerateNonce();
-  printf("Server's Initial Nonce:\n");
+  printf("\nServer's Initial Nonce:\n");
   display_bytes(initial_server_nonce, crypto_box_NONCEBYTES);
+  printf("\nServer's Personal Public Key:\n");
+  display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
+  printf("\nGenerated server's next nonce\n");
 
   /* Generate client nonce */
   printf("Client's Nonce:\n");
@@ -87,9 +73,19 @@ int main()
   initial_server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
   /* PROTOCOL 3*/
-  serverGenerateNonce(); 
+  //  serverGenerateNonce(); 
   time_t name = time(NULL);
   server_encrypt_time_message(server_encrypted_timestamp_location);
 
   return NO_ERROR;
 }
+  /* Generate server's personal keyPair 
+  serverGenerateKeyPair();
+  printf("Server's Personal Public Key:\n");
+  display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
+  */
+
+  /* Generate server nonce 
+    initialServerGenerateNonce();
+  printf("Server's Initial Nonce:\n");
+  display_bytes(initial_server_nonce, crypto_box_NONCEBYTES);*/

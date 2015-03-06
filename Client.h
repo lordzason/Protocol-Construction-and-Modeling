@@ -32,5 +32,5 @@ void  clientPairConcatenate (unsigned char* result, unsigned char *element1, lon
 //void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length);
 void clientZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length);
 
-void display_bytes(const unsigned char *byte_vector, long long int length);
+//void display_bytes(const unsigned char *byte_vector, long long int length);
 

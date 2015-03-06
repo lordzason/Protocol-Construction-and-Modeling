@@ -1,26 +1,39 @@
-/* Server Header File */
+/*****************************************************************
+ *   Authors:     Albert Owusu-Asare  <owusuasa@grinnell.edu>
+ *                Zhi Chen
+ *   Created:     February 28, 2015
+ *   Last edited: Thu Mar  5 21:43:09 CST 2015
+ *
+ *   This file contains function prototypes for  basic utilities 
+ *   for the  server
+ *   
+ *******************************************************************/
 
-/* 
-   Albert Owusu-Asare
-   Zhi Chen
+#ifndef _SERVER_  //include guards to prevent double declaration
+#define _SERVER_
 
-   created February 28, 2015
-   last revised March 05, 2015
-*/
+#ifndef _CRYPTO_BOX_ //include  guards to prevent double declaration
+#define _CRYPTO_BOX_
+#include <crypto_box.h>  //crypto box libraries
+#endif
 
-#include <crypto_box.h>
+#ifndef _RANDOM_ //include  guards to prevent double declaration
+#define _RANDOM_
 #include "devurandom.h"
-#include "Client.h" //REMEMBER TO REMOVE
+#endif
 
 /* Variables and Structures*/
+
+//server initialisation variables
 unsigned char initial_server_nonce[crypto_box_NONCEBYTES];
 unsigned char initial_server_pk[crypto_box_PUBLICKEYBYTES];
 unsigned char initial_server_sk[crypto_box_SECRETKEYBYTES];
+
 unsigned char server_pk[crypto_box_PUBLICKEYBYTES];
-unsigned char server_sk[crypto_box_SECRETKEYBYTES]; //REMEMBER TO REMOVE
 unsigned char client_pk [crypto_box_PUBLICKEYBYTES];
-unsigned char current_nonce[crypto_box_NONCEBYTES]; 
-unsigned char next_nonce[crypto_box_NONCEBYTES]; 
+//unsigned char current_nonce[crypto_box_NONCEBYTES]; 
+//unsigned char next_nonce[crypto_box_NONCEBYTES]; 
+
 union Data
 {
   time_t time;
@@ -28,6 +41,10 @@ union Data
 };
 
 /* Methods for the client*/
+
+/* Activates server by generating initial server nonce and initial server
+   key pair*/
+void server_start_first_time_init();
 void initialServerGenerateNonce();
 void serverGenerateNonce();
 void serverGenerateKeyPair();
@@ -40,3 +57,4 @@ void  serverPairConcatenate (unsigned char* result, unsigned char *element1, lon
 void serverZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length);
 void server_send_encryption(char *encryptedFileLocation,unsigned char ciphertext [], int ciphertext_length );
 
+#endif
