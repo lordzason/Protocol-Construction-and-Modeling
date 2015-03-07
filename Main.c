@@ -1,18 +1,23 @@
-/* Main */
+/*****************************************************************
+ *   Authors:      Albert Owusu-Asare <owusuasa@grinnell.edu>
+ *                 Zhi Chen           
+ *
+ *   Created:      created February 25, 2015
+ *   Last revised: Fri Mar  6 16:00:10 CST 2015
+ *
+ *   This file contains the main method that simulates the Protocol
+ *
+ *   Special thanks to John David Stone for both his insight and 
+ *   help with supplying  preliminary code(tryout.c) from which 
+ *   this code base was inspired.
+ *  
+ *   John David Stone
+ *   Department of Computer Science
+ *   Grinnell College
+ *   stone@cs.grinnell.edu
 
-/* 
-   Albert Owusu-Asare
-   Zhi Chen
+ *******************************************************************/
 
-   Code Referenced From:
-   John David Stone
-   Department of Computer Science
-   Grinnell College
-   stone@cs.grinnell.edu
-
-   created February 25, 2015
-   last revised February 25, 2015
-*/
 
 #include <stdio.h>
 #include <assert.h>
@@ -35,12 +40,11 @@ int main()
   char initial_client_encryption_location [] ="clientEncryptedFile.txt"; 
   char server_encrypted_timestamp_location [] = "serverEncryptedTimeStamp.txt"; 
 
-  /* Sever Initialisation: Initial nonce, public key and secret key are created*/
-  //  initialServerGenerateKeyPair(); change to much general initialisation
+  /* PROTOCOL STEP 0 :Sever Initialisation: */
+
   printf("\nBeginning server initialisation process..\n");
-
   server_start_first_time_init();
-
+  //display progress to stdout
   printf("\nServer's Initial Public Key:\n");
   display_bytes(initial_server_pk,crypto_box_PUBLICKEYBYTES);
   printf("\nServer's Initial Secret Key:\n");
@@ -51,25 +55,22 @@ int main()
   display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
   printf("\nGenerated server's next nonce\n");
 
-  /* Generate client nonce */
-  printf("Client's Nonce:\n");
-  clientGenerateNonce();
-  
+  /* PROTOCOL STEP 1: Client send initial message  */
+ 
   /* Generate client public keyPair */
   clientGenerateKeyPair();
-  printf("Client Public Key:\n");
+  printf("\nClient Public Key:\n");
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
-  printf("Client Secret Key:\n");
-  display_bytes(client_sk,crypto_box_SECRETKEYBYTES);
 
   /* Client concatenates the nonce and its own public key */
-  printf("Client Encrypt and Send\n");
-  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,server_pk,initial_client_encryption_location);
-  printf("Client Encrypt and Send End\n");
-  
+  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,
+                                                              server_pk,initial_client_encryption_location);
+  printf("\nClient Encrypted and Sent Initial Nonce to file\n");
+
+
+  /* PROTOCOL STEP 2: Server Decrypts Client's Message and Encrypts New Message */
   /* Server decrypts initial message*/
   printf("Server Decrypt\n");
-  //server_decrypt_message (initial_client_encryption_location,cipher_text_length);
   initial_server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
   /* PROTOCOL 3*/
@@ -89,3 +90,9 @@ int main()
     initialServerGenerateNonce();
   printf("Server's Initial Nonce:\n");
   display_bytes(initial_server_nonce, crypto_box_NONCEBYTES);*/
+
+
+
+/* Generate client nonce */
+  //printf("Client's Nonce:\n");
+  //clientGenerateNonce();

@@ -43,8 +43,6 @@ long long elementLength)
 
   for (counter = 0; counter < elementLength; counter++)
     result[crypto_box_ZEROBYTES + counter] = element[counter];
-  printf("Server concatenate with zero\n");
-  display_bytes(result,crypto_box_ZEROBYTES+elementLength );
 
 }//serverZeroConcatenate(unsigned char *, unsigned char *, long long)
 

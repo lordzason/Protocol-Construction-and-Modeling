@@ -1,19 +1,21 @@
-/* Client Header File */
+/*****************************************************************
+ *   Authors:     Albert Owusu-Asare  <owusuasa@grinnell.edu>
+ *                Zhi Chen
+ *
+ *   Created:     February 25, 2015
+ *   Last edited: Fri Mar  6 16:07:08 CST 2015
+ *
+ *   This file contains function prototypes for the client side of the
+ *   Protocol Construction.
+ *   
+ *******************************************************************/
 
-/* 
-   Albert Owusu-Asare
-   Zhi Chen
-
-   created February 25, 2015
-   last revised March 05, 2015
-*/
 
 #include <crypto_box.h>
 #include "devurandom.h"
 
 /* Variables and Structures*/
 unsigned char client_pk[crypto_box_PUBLICKEYBYTES];
-unsigned char client_sk[crypto_box_SECRETKEYBYTES]; //REMEMBER TO REMOVE
 unsigned char* concatResult;
 
 /* Methods for the client*/

@@ -29,10 +29,12 @@
 #include "devurandom.h"
 
 //Check if all of the defines are needed
+
 #define INTERNAL_MESSAGE_LENGTH  45
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
 #define SIZE_TIME_t              8
+#define COMBINED_NONCE_LENGTH    (crypto_box_ZEROBYTES + crypto_box_NONCEBYTES + crypto_box_NONCEBYTES)
 
 /*Fields and Variables*/
 //Server's secret key
@@ -40,7 +42,7 @@ unsigned char server_sk[crypto_box_SECRETKEYBYTES];
 //Current nonce to be used in decrytion
 unsigned char *current_nonce;
 //Next nonce to be used in encryption
-unsigned char next_nonce[crypto_box_NONCEBYTES]; 
+unsigned char * next_nonce;
 //Stores the public key of the client
 unsigned char client_pk [crypto_box_PUBLICKEYBYTES];
 
@@ -96,14 +98,56 @@ void server_decrypt_message (char * filename, long long cipher_text_length){
                                cipher_text_length-crypto_box_PUBLICKEYBYTES,initial_server_nonce,
                                client_pk,server_sk); //initial_server_nonce will change to other nonces
   assert(result == 0);
-  printf("Server Decrypted Message:\n");
+  printf("\nServer.c Server Decrypted Message:\n");
   display_bytes(message,cipher_text_length-crypto_box_PUBLICKEYBYTES);
+}//server_decrypt_message(char *)
+
+void server_decrypt_message (char * filename, long long cipher_text_length){
+
+  //Variables
+  int counter;
+  FILE *encryptedFile;
+  unsigned char cipher_text[cipher_text_length];
+  unsigned char nonce_portion[COMBINED_NONCE_LENGTH]; // stores the 2 nonces + zero bytes
+  unsigned char message[cipher_text_length]; //stores decrypted message
+  unsigned char remaining_info[cipher_text_length -COMBINED_NONCE_LENGTH];
+  unsigned char * nonce = (unsigned char) malloc(crypto_box_NONCEBYTES * sizeof(unsigned char));
+
+  //Read file into ciphertext
+  encryptedFile = fopen(filename, "r");
+  fread(cipher_text,sizeof(unsigned char), cipher_text_length * sizeof(unsigned char), 
+        encryptedFile);
+  fclose(encryptedFile);
+ 
+
+  //Use cryptobox open to decrpyt the ciphertext
+  int result = crypto_box_open(message,cipher_text,cipher_text_length,current_nonce,
+                               client_pk,server_sk); //initial_server_nonce will change to other nonces
+  assert(result == 0);
+
+  printf("\nServer.c Server Decrypted Message:\n");
+  display_bytes(message,cipher_text_length);
+
+  // Split message into respective components
+  // Get the next nonce;
+  for(counter= 0 ; counter <crypto_box_NONCEBYTES; counter ++){
+    nonce[counter] = message[crypto_box_NONCEBYTES + crypto_box_ZEROBYTES + counter];
+
+    next_nonce  = nonce;
+    // Get the remaining information
+    for(counter= 0; counter < cipher_text_length - COMBINED_NONCE_LENGTH ; counter ++){
+      remaining_info[counter] = message[COMBINED_NONCE_LENGTH +counter];
+    }//for
+
+    // We will decide what to do with this next
+
+  }//for
 }//server_decrypt_message(char *)
 
 /*
  * Parameters : filename , string reprentation of the file to retrieve the encrypted message 
                 cipher_text_length,  the length of the encrypted message             
-*/
+
 
 void initial_server_decrypt_message (char * filename, long long cipher_text_length){
 
@@ -139,14 +183,14 @@ void initial_server_decrypt_message (char * filename, long long cipher_text_leng
     for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
     current_nonce[counter] = message[counter+crypto_box_ZEROBYTES];
 
-  printf("Server Decrypted Client Public Key:\n");
+  printf("\nServer.c Server Decrypted Client Public Key:\n");
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
-  printf("Server Decrypted Message:\n");
+  printf("\nServer.c Server Decrypted Message:\n");
   display_bytes(message,cipher_text_length-crypto_box_PUBLICKEYBYTES);
-  printf("Showing the current nonce after decryption:\n");
+  printf("\nServer.c Showing the current nonce after decryption:\n");
   display_bytes(current_nonce,crypto_box_NONCEBYTES);
 }//server_decrypt_message(char *)
-
+*/
 /*
  * Performs encryption on the time stamp, current and next nonces
  */
@@ -181,7 +225,7 @@ void server_encrypt_time_message(char *encryptedFileLocation){
   //Encrypt the result of all concatenation
   int result = crypto_box(cipher_text,message,length,current_nonce,client_pk,server_sk);
   assert(result == 0);
-  printf("Server Encrypt Time Message:\n");
+  printf("\nServer.c Server Encrypt Time Message:\n");
   display_bytes(cipher_text,length);
 
   //Server sends encrypted time stamp to the client via a file
