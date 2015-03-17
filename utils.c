@@ -2,8 +2,11 @@
  *   Authors: Albert Owusu-Asare
  *            Zhi Chen
  *
+ *   Last revised:  Tue Mar 17 16:14:20 CDT 2015
+ *
  *   This file contains the source for  basic utilities for the 
  *   Protocol Construction.
+ *
  *   The file contians the following methods:
  *   
  *******************************************************************/
@@ -67,7 +70,9 @@ void  concat_buffers (unsigned char* result_buffer, unsigned char *buffer1,
 
 }//concat_buffers(unsigned char *,long long,  unsigned char *, long long)
 
-
+/* Concatenates 3 buffers : current nonce ,next nonce, message and adds
+ * zero bytes in front of the resultant buffer.
+ * 
 
 /* Writes the contents of the buffer "text" to the fileLocation "fileLocation"
 */

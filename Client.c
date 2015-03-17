@@ -1,18 +1,25 @@
-/* Client */
 
-/* 
-   Albert Owusu-Asare
-   Zhi Chen
+/*****************************************************************
+ *   Authors:      Albert Owusu-Asare
+ *                 Zhi Chen
+ *
+ *   Created:      February 10, 2015
+ *   Last revised: Tue Mar 17 16:14:20 CDT 2015
+ *
+ *   This file contains the source for the methods of the client.
+ *
+ *   Special thanks to John David Stone for both his insight and 
+ *   help with supplying  preliminary code(tryout.c) from which 
+ *   this code base was inspired.
+ *  
+ *   John David Stone
+ *   Department of Computer Science
+ *   Grinnell College
+ *   stone@cs.grinnell.edu
 
-   Code Referenced From:
-   John David Stone
-   Department of Computer Science
-   Grinnell College
-   stone@cs.grinnell.edu
+ *******************************************************************/
 
-   created February 10, 2015
-   last revised February 24, 2015
-*/
+
 
 #include <stdio.h>
 #include <assert.h>
@@ -26,7 +33,8 @@
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
 #define NONCE_PK_LENGTH          crypto_box_NONCEBYTES + crypto_box_PUBLICKEYBYTES
-
+#define COMBINED_NONCE_LENGTH    (crypto_box_ZEROBYTES + crypto_box_NONCEBYTES 
++ crypto_box_NONCEBYTES)
 
 /*Fields and Variables*/
 unsigned char client_sk[crypto_box_SECRETKEYBYTES];
@@ -44,7 +52,7 @@ void clientGenerateKeyPair()
   result = crypto_box_keypair(client_pk,client_sk);
   assert(result == 0);
   printf("\nClient.c Client Secret Key Generate:\n"); //remember to take out this line
-  display_bytes(client_sk,crypto_box_SECRETKEYBYTES);
+  display_bytes(client_sk,crypto_box_SECRETKEYBYTES); //remember to take out this line
 }//clientGenerateKeyPair()
 
 
@@ -85,7 +93,24 @@ long long  client_encrypt_nonce_pk_send(unsigned char *serverNonce,long long non
 }//client_encrypt_nonce_pk()
 
 
+/*
+ * trying to hide a lot of details and encapsulate information
+ *
+ */
 
+unsinged char * client_encrypt_message(unsigned char * message, long long message_length,
+                                  unsigned char * receiver_pk){
+
+  // Every message to be decrypted will be of the form:
+  // zero bytes + current Nonce + Next Nonce + message;
+  unsigned char unencrypted_message[COMBINED_NONCE_LENGTH + message_length];
+  
+  //concate current and next nonce
+  next_nonce = generate_nonce();
+  concat_buffers
+
+
+}//client_encrypt_message()
 
 /* Client sends encrypted message to the server 
 void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertext [], int ciphertext_length )

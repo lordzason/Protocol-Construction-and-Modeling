@@ -1,0 +1,4 @@
+This document serves to explain how the protocol works.
+
+
+server_decrypt_message: Always assumes incoming of two nonces

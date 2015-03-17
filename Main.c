@@ -3,7 +3,7 @@
  *                 Zhi Chen           
  *
  *   Created:      created February 25, 2015
- *   Last revised: Fri Mar  6 16:00:10 CST 2015
+ *   Last revised: Tue Mar 17 16:15:47 CDT 2015
  *
  *   This file contains the main method that simulates the Protocol
  *
@@ -42,8 +42,9 @@ int main()
 
   /* PROTOCOL STEP 0 :Sever Initialisation: */
 
-  printf("\nBeginning server initialisation process..\n");
+  printf("\nSTEP 0 : Beginning server initialisation process...\n");
   server_start_first_time_init();
+
   //display progress to stdout
   printf("\nServer's Initial Public Key:\n");
   display_bytes(initial_server_pk,crypto_box_PUBLICKEYBYTES);
@@ -53,28 +54,30 @@ int main()
   display_bytes(initial_server_nonce, crypto_box_NONCEBYTES);
   printf("\nServer's Personal Public Key:\n");
   display_bytes(server_pk,crypto_box_PUBLICKEYBYTES);
-  printf("\nGenerated server's next nonce\n");
+  printf("\nGenerated server's next nonce.. Not shown here for safety\n");
 
   /* PROTOCOL STEP 1: Client send initial message  */
- 
-  /* Generate client public keyPair */
+     printf("\nSTEP 1 : Client to send initial message...\n");
+  
+     // Generate client public keyPair 
   clientGenerateKeyPair();
   printf("\nClient Public Key:\n");
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
 
-  /* Client concatenates the nonce and its own public key */
-  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,crypto_box_NONCEBYTES,
-                                                              server_pk,initial_client_encryption_location);
+  // Client concatenates the nonce and its own public key 
+  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,
+                                                              crypto_box_NONCEBYTES,
+                                                              server_pk,
+                                                              initial_client_encryption_location);
   printf("\nClient Encrypted and Sent Initial Nonce to file\n");
 
 
   /* PROTOCOL STEP 2: Server Decrypts Client's Message and Encrypts New Message */
   /* Server decrypts initial message*/
   printf("Server Decrypt\n");
-  initial_server_decrypt_message (initial_client_encryption_location,cipher_text_length);
+  server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
-  /* PROTOCOL 3*/
-  //  serverGenerateNonce(); 
+  /* PROTOCOL STEP 3*/
   time_t name = time(NULL);
   server_encrypt_time_message(server_encrypted_timestamp_location);
 
