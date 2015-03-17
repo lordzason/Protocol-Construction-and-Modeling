@@ -4,7 +4,7 @@
  *                 Zhi Chen
  *
  *   Created:      February 28, 2015
- *   Last revised: February 28, 2015
+ *   Last revised: Tue Mar 17 16:14:20 CDT 2015
  *
  *   This file contains the source for the methods of the server.
  *
@@ -21,6 +21,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <crypto_box.h>
 #include <time.h>
@@ -34,7 +35,8 @@
 #define MESSAGE_LENGTH           (crypto_box_ZEROBYTES + INTERNAL_MESSAGE_LENGTH)
 #define NO_ERROR                 0
 #define SIZE_TIME_t              8
-#define COMBINED_NONCE_LENGTH    (crypto_box_ZEROBYTES + crypto_box_NONCEBYTES + crypto_box_NONCEBYTES)
+#define COMBINED_NONCE_LENGTH    (crypto_box_ZEROBYTES + crypto_box_NONCEBYTES 
++ crypto_box_NONCEBYTES)
 
 /*Fields and Variables*/
 //Server's secret key
@@ -63,16 +65,20 @@ void server_start_first_time_init(){
   // Generate personal Key pair 
   result = crypto_box_keypair(server_pk,server_sk);
   assert(result == 0);
-
   //Generate next_nonce
-  randombytes(next_nonce, crypto_box_NONCEBYTES); 
+  unsigned char * temp_nonce = (unsigned char *) malloc(crypto_box_NONCEBYTES * 
+                                                        sizeof(unsigned char));
+  randombytes(temp_nonce, crypto_box_NONCEBYTES); 
+  next_nonce = temp_nonce;
+  assert(next_nonce != NULL);
 }//initialise_server()
 
 /*
  * Parameters : filename , string reprentation of the file to retrieve encrypted message from 
                 cipher_text_length,  the length of the encrypted message            
  */
-void server_decrypt_message (char * filename, long long cipher_text_length){
+
+/*void server_decrypt_message (char * filename, long long cipher_text_length){
 
   //Variables
   int counter;
@@ -102,13 +108,18 @@ void server_decrypt_message (char * filename, long long cipher_text_length){
   display_bytes(message,cipher_text_length-crypto_box_PUBLICKEYBYTES);
 }//server_decrypt_message(char *)
 
+*/
+/* 
+ * i think what we are doing is to establish a protocol where we always use two
+ * nonces
+ */
 void server_decrypt_message (char * filename, long long cipher_text_length){
 
   //Variables
   int counter;
   FILE *encryptedFile;
   unsigned char cipher_text[cipher_text_length];
-  unsigned char nonce_portion[COMBINED_NONCE_LENGTH]; // stores the 2 nonces + zero bytes
+  unsigned char nonce_portion[COMBINED_NONCE_LENGTH]; // stores zero bytes + 2 nonces
   unsigned char message[cipher_text_length]; //stores decrypted message
   unsigned char remaining_info[cipher_text_length -COMBINED_NONCE_LENGTH];
   unsigned char * nonce = (unsigned char) malloc(crypto_box_NONCEBYTES * sizeof(unsigned char));

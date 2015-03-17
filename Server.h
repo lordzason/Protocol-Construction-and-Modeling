@@ -31,8 +31,7 @@ unsigned char initial_server_sk[crypto_box_SECRETKEYBYTES];
 
 unsigned char server_pk[crypto_box_PUBLICKEYBYTES];
 unsigned char client_pk [crypto_box_PUBLICKEYBYTES];
-//unsigned char current_nonce[crypto_box_NONCEBYTES]; 
-//unsigned char next_nonce[crypto_box_NONCEBYTES]; 
+ 
 
 union Data
 {
