@@ -1,0 +1,136 @@
+This document serves to explain how the protocol works.
+
+                                  CONTENTS
+---------------------------------------------------------------------------------------------
+
+* Download instructions
+* General Information
+* Sample runs of program ( putting it all together)
+* Troubleshooting: possible errors
+* Further help and contact details
+* GNU Free Documentation License
+
+=============================================================================================
+
+
+
+
+
+                               * DOWNLOAD INSTRUCTIONS
+---------------------------------------------------------------------------------------------
+---------------------------------
+ Clone the package from github
+
+
+***********************************************************************
+Prerequisites: git, github account                                    *
+                                                                      *
+Move on to 'Steps' if you have both of the above else :               *
+                                                                      *
+    Download latest version of git:                                   *
+                          http://git-scm.com/downloads                * 
+    Sign up at github:                                                *
+                      https://github.com/join                         *
+    For basic help with git:                                          *
+                     http://git-scm.com/doc                                                              
+***********************************************************************
+
+Steps:
+
+1.In a terminal window, move to the required directory.
+2.Type into the terminal at the required directory:
+       git clone https://github.com/lordzason/Protocol-Construction-and-Modeling
+3. Follow given instructions from git about username and password
+4. A working directory will be created as 'Protocol-Construction-and-Modeling
+   -->   Downloading of the package may take a while. Check progress percentage
+
+EXAMPLE:
+1. cd /home/USER/Protocols
+2. git clone https://github.com/lordzason/Protocol-Construction-and-Modeling
+3  Username for 'https://github.com': myusername
+   Password for 'https://myusername@github.com': ********
+4. cd Protocol-Construction-and-Modeling
+
+============================================================================================
+
+
+
+
+
+                                 *GENERAL INFORMATION
+--------------------------------------------------------------------------------------------
+
+
+
+**What the program does:
+-----------------------
+
+Overview: 
+The objective this time is to implement the two sides of a protocol in
+which one side (the client) poses a question and the other (the server)
+answers it, in such a way that eavesdroppers cannot determine either the
+question or the answer.
+
+
+
+       Program files and directories:
+-----------------------------------
+As a whole the program uses the following files:
+
+----------
+header files:
+
+
+
+The Program is devided into 4 parts:
+
+ 0.) Sever Initialisation
+ 1.) Client send initial message
+ 2.) Server decrypts client's message and encrypts new message
+ 3.) 
+
+
+
+ 0. Server Initialisation
+------------------------------
+
+To kick start the protocol the server must initialise some of its key
+utilities. Firstly for the sake of the first round of communication, the
+server generates a "dummy" keypair which it makes available to all clients.
+The server then generates its actual keypair, making the public key
+available to all prospective clients and keeping the secret key private.
+At this stage the first time nonce is also created and made available
+to all clients.
+
+The entire process is implemented as "server_start_first_time_init()" 
+please see Server.h or Server.c for more details
+
+*You may notice that in "server_start_first_time_init()" we generate an
+additional nonce which will be used in the next round of communication.
+
+
+
+1. Client send initial message
+---------------------------------------
+
+Here the client sends the server its public key and the nonce for the next
+communication to the server. 
+
+The first step is to generate the clients keypair. Using
+"crypto_box_keypair", we generate both the client's secrete and public
+keys. The encryption of the information and the sending of the encypted
+message to file is done by "client_encrypt_nonce_pk_send".
+
+
+
+
+
+
+Working on a general concatenate function that will take in 3 parameters
+nonce current, nonce next, and the message and for the 1 step in the client
+send initial message.
+
+the idea is that every message that we will send in this protocol is going 
+to have the form 
+
+zb+ nonce before +nonce after + message
