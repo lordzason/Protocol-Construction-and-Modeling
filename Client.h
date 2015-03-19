@@ -3,7 +3,7 @@
  *                Zhi Chen
  *
  *   Created:     February 25, 2015
- *   Last edited: Fri Mar  6 16:07:08 CST 2015
+ *   Last edited: Mar 18 18:24:41 CDT 2015
  *
  *   This file contains function prototypes for the client side of the
  *   Protocol Construction.
@@ -36,3 +36,23 @@ void clientZeroConcatenate (unsigned char * result, unsigned char *element1, lon
 
 //void display_bytes(const unsigned char *byte_vector, long long int length);
 
+
+/*
+ *  Client sends initial message
+ */
+void client_send_initial_message(char * output_filename,unsigned char * receiver_pk)
+
+/*
+ * Rolls through the array of messages and selects the next message to send.
+ */
+
+unsigned char * next_message();
+
+
+/*
+ * Encrypts Client messages
+ *
+ */
+
+unsigned char * client_encrypt_message(unsigned char * message, long long message_length,
+                                       unsigned char * receiver_pk);

@@ -1,7 +1,8 @@
 /*****************************************************************
  *   Authors:     Albert Owusu-Asare  <owusuasa@grinnell.edu>
  *                Zhi Chen
- *   Last edited: Thu Mar  5 21:43:09 CST 2015
+ *   Last edited: Wed Mar 18 17:33:35 CDT 2015
+
  *
  *   This file contains function prototypes for  basic utilities for the 
  *   Protocol Construction.
@@ -43,6 +44,14 @@ void  concat_buffers (unsigned char* result_buffer, unsigned char *buffer1,
                       long long buf1_len, unsigned char *buffer2, 
                       long long buf2_len);
 
+/* Concatenates 3 buffers : current nonce ,next nonce, message and adds
+ * zero bytes in front of the resultant buffer.
+ *
+ */
+unsigned char * concat_zero_nonce_message (unsigned char  * n0, unsigned char * n1,
+                                           unsigned char * message, 
+                                           long long message_length);
+
 /* Writes the contents of the buffer "text" to the fileLocation "fileLocation"
 */
 void write_message_to_file(char *fileLocation,unsigned char text [],
@@ -51,6 +60,7 @@ void write_message_to_file(char *fileLocation,unsigned char text [],
 /* Generates a random nonce see documentation of devurandom.c
 */
 unsigned char *  generate_nonce();
+
 
 
 #endif

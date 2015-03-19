@@ -2,7 +2,7 @@
  *   Authors: Albert Owusu-Asare
  *            Zhi Chen
  *
- *   Last revised:  Tue Mar 17 16:14:20 CDT 2015
+ *   Last revised:  Wed Mar 18 17:24:59 CDT 2015
  *
  *   This file contains the source for  basic utilities for the 
  *   Protocol Construction.
@@ -15,7 +15,8 @@
 #include <stdlib.h>
 #include <crypto_box.h>
 #include "devurandom.h" //used for testing with random bytes
-
+#define ZERO_NONCE_LENGTH    (crypto_box_ZEROBYTES + crypto_box_NONCEBYTES 
++ crypto_box_NONCEBYTES)
 
 /* Display the contents of an array of unsigned char values. 
    This method  was copied verbatim ,with permission, from
@@ -72,7 +73,31 @@ void  concat_buffers (unsigned char* result_buffer, unsigned char *buffer1,
 
 /* Concatenates 3 buffers : current nonce ,next nonce, message and adds
  * zero bytes in front of the resultant buffer.
- * 
+ *
+ */
+
+unsigned char * concat_zero_nonce_message (unsigned char  * n0, unsigned char * n1,
+                                           unsigned char * message, 
+                                           long long message_length)
+{
+
+  unsinged char * result = (unsinged char *) malloc((ZERO_NONCE_LENGTH + message_length) * (unsinged char ));
+  // add zero bytes
+  int counter;
+  for (counter = 0; counter < crypto_box_ZEROBYTES; counter++)
+    result[counter] = 0;
+  // add current nonce
+  for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
+    result[ crypto_box_ZEROBYTES+ counter] = n0[counter];
+  //add next nonce
+  for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
+    result[ crypto_box_ZEROBYTES+ crypto_box_NONCEBYTES + counter] = n1[counter];
+  //add message
+   for (counter = 0; counter < message_length; counter++)
+    result[ZERO_NONCE_LENGTH + counter] = message[counter];
+   return result;
+
+}//concat_zero_nonce_message
 
 /* Writes the contents of the buffer "text" to the fileLocation "fileLocation"
 */

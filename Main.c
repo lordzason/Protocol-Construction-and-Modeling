@@ -65,21 +65,22 @@ int main()
   display_bytes(client_pk,crypto_box_PUBLICKEYBYTES);
 
   // Client concatenates the nonce and its own public key 
-  long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,
-                                                              crypto_box_NONCEBYTES,
-                                                              server_pk,
-                                                              initial_client_encryption_location);
+  client_send_initial_message(initial_client_encryption_location,server_pk);
+  // long long cipher_text_length = client_encrypt_nonce_pk_send(initial_server_nonce,
+  //    crypto_box_NONCEBYTES,
+  //   server_pk,
+  //    initial_client_encryption_location);
   printf("\nClient Encrypted and Sent Initial Nonce to file\n");
 
 
   /* PROTOCOL STEP 2: Server Decrypts Client's Message and Encrypts New Message */
   /* Server decrypts initial message*/
-  printf("Server Decrypt\n");
-  server_decrypt_message (initial_client_encryption_location,cipher_text_length);
+  //printf("Server Decrypt\n");
+  // server_decrypt_message (initial_client_encryption_location,cipher_text_length);
 
   /* PROTOCOL STEP 3*/
-  time_t name = time(NULL);
-  server_encrypt_time_message(server_encrypted_timestamp_location);
+  //time_t name = time(NULL);
+  //server_encrypt_time_message(server_encrypted_timestamp_location);
 
   return NO_ERROR;
 }

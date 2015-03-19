@@ -134,3 +134,100 @@ the idea is that every message that we will send in this protocol is going
 to have the form 
 
 zb+ nonce before +nonce after + message
+
+
+
+
+
+/* Client sends encrypted message to the server 
+void client_send_encryption(char *encryptedFileLocation,unsigned char  ciphertext [], int ciphertext_length )
+{
+  FILE *clientEncryptedFile;
+  clientEncryptedFile = fopen(encryptedFileLocation, "w");
+
+  printf("Client Wrote to the Encrypted File the Following:\n");
+  display_bytes(ciphertext,crypto_box_ZEROBYTES+NONCE_PK_LENGTH);
+  fwrite(ciphertext, sizeof(unsigned char), ciphertext_length * sizeof(unsigned char), clientEncryptedFile);
+  fclose(clientEncryptedFile);
+}//client_send_encryption
+*/
+
+/* Concatenates two elements together 
+void  clientPairConcatenate (unsigned char* result, unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length)
+{
+  int counter;
+
+  for (counter = 0; counter < element1Length; counter++)
+    result[counter] = element1[counter];
+
+  for (counter = 0; counter < element2Length; counter++)
+    result[element1Length + counter] = element2[counter];
+}//clientConcatenate
+
+*/
+
+/* Client nonce and public key concatenation */
+/*void client_nonce_pk_concatation()
+{
+  int counter;
+
+  for (counter = 0; counter < crypto_box_ZEROBYTES; counter++)
+    client_nonce_pk_concatation_result[counter] = 0;
+
+  for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
+    client_nonce_pk_concatation_result[crypto_box_ZEROBYTES + counter] = client_shared_nonce[counter];
+
+  for (counter = 0; counter < crypto_box_PUBLICKEYBYTES; counter++)
+    client_nonce_pk_concatation_result[crypto_box_ZEROBYTES + crypto_box_NONCEBYTES + counter] = client_pk[counter];
+
+    }//client_nonce_pk_concatation()*/
+
+
+/*
+void clientConcatenate (unsigned char *element1, long long element1Length, unsigned char *element2, long long element2Length)
+{
+  int counter;
+  unsigned char result[crypto_box_ZEROBYTES + element1Length + element2Length];
+
+  for (counter = 0; counter < crypto_box_ZEROBYTES; counter++)
+    result[counter] = 0;
+
+  for (counter = 0; counter < element1Length; counter++)
+    result[crypto_box_ZEROBYTES + counter] = element1[counter];
+
+  for (counter = 0; counter < element2Length; counter++)
+    result[crypto_box_ZEROBYTES + element1Length + counter] = element2[counter];
+
+  concatResult = result;
+}//clientConcatenate
+*/
+
+/* Generates a nonce composed of 0s or a random nonce 
+void clientGenerateNonce()
+{
+  // static unsigned char shared_nonce[crypto_box_NONCEBYTES];
+  //long long int counter;
+
+  randombytes(client_nonce, crypto_box_NONCEBYTES);
+  //for (counter = 0; counter < crypto_box_NONCEBYTES; counter++)
+    //client_shared_nonce[counter] = 0;
+  printf("Client Shared Nonce:\n");
+  display_bytes(client_nonce, crypto_box_NONCEBYTES);
+  //return shared_nonce;
+
+  }//clientGenerateNonce() */
+
+/* Add zero bytes to element 
+void clientZeroConcatenate (unsigned char * result, unsigned char *element1, long long element1Length)
+{
+  int counter;
+
+  for (counter = 0; counter < crypto_box_ZEROBYTES; counter++)
+    result[counter] = 0;
+
+  for (counter = 0; counter < element1Length; counter++)
+    result[crypto_box_ZEROBYTES + counter] = element1[counter];
+  printf("concatenate with zero\n");
+ display_bytes(result,crypto_box_ZEROBYTES+element1Length );
+}//clientConcatenate
+*/
